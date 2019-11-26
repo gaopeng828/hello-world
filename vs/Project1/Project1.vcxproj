@@ -123,6 +123,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\dpx\cmd_parse.h" />
+    <ClInclude Include="..\..\dpx\dpx.h" />
+    <ClInclude Include="..\..\dpx\fifo.h" />
+    <ClInclude Include="..\..\dpx\logging.h" />
+    <ClInclude Include="..\..\dpx\utl.h" />
+    <ClInclude Include="..\..\dpx\vdo.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\dpx\cmd_parse.c" />
+    <ClCompile Include="..\..\dpx\dpx.c" />
+    <ClCompile Include="..\..\dpx\fifo.c" />
+    <ClCompile Include="..\..\dpx\logging.c" />
+    <ClCompile Include="..\..\dpx\main.c" />
+    <ClCompile Include="..\..\dpx\utl.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

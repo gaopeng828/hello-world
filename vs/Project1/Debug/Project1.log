@@ -1,0 +1,7 @@
+﻿  main.c
+C:\projects\projects\hello-world\dpx\main.c(27,29): warning C4101: “bitsfname”: 未引用的局部变量
+C:\projects\projects\hello-world\dpx\main.c(27,7): warning C4101: “f”: 未引用的局部变量
+C:\projects\projects\hello-world\dpx\main.c(24,9): warning C4101: “j”: 未引用的局部变量
+C:\projects\projects\hello-world\dpx\main.c(24,6): warning C4101: “i”: 未引用的局部变量
+C:\projects\projects\hello-world\dpx\main.c(44,9): warning C4101: “j”: 未引用的局部变量
+  Project1.vcxproj -> C:\projects\projects\hello-world\vs\Project1\Debug\Project1.exe

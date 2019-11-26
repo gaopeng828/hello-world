@@ -44,6 +44,7 @@
 ***************************************************************************/
 #ifndef VDO_H
 #define VDO_H
+#define WIN32
 
 #include <math.h> /* for fmod(3) */
 
