@@ -37,6 +37,18 @@ class GameConfig:
     tick_ms: int = 140
 
 
+@dataclass
+class Particle:
+    x: float
+    y: float
+    vx: float
+    vy: float
+    life: int
+    max_life: int
+    radius: float
+    color: str
+
+
 class SnakeGame:
     def __init__(self, width: int = 20, height: int = 20, seed: int | None = None):
         if width < 4 or height < 4:
@@ -109,6 +121,8 @@ class SnakeApp:
     def __init__(self, config: GameConfig):
         self.config = config
         self.game = SnakeGame(width=config.width, height=config.height)
+        self._random = random.Random()
+        self.particles: List[Particle] = []
 
         self.root = tk.Tk()
         self.root.title("Snake")
@@ -134,12 +148,61 @@ class SnakeApp:
 
     def _restart(self) -> None:
         self.game = SnakeGame(width=self.config.width, height=self.config.height)
+        self.particles.clear()
 
     def _draw_cell(self, x: int, y: int, color: str) -> None:
         size = self.config.cell_size
         x1, y1 = x * size, y * size
         x2, y2 = x1 + size, y1 + size
         self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="#222222")
+
+    def _cell_center(self, x: int, y: int) -> Tuple[float, float]:
+        size = self.config.cell_size
+        return (x * size + size / 2, y * size + size / 2)
+
+    def _spawn_burst(self, x: float, y: float, count: int, speed: float, colors: List[str]) -> None:
+        for _ in range(count):
+            magnitude = speed * (0.4 + self._random.random())
+            vx = magnitude * (self._random.random() * 2 - 1) * 0.9
+            vy = magnitude * (self._random.random() * 2 - 1) * 0.9
+            life = self._random.randint(8, 16)
+            self.particles.append(
+                Particle(
+                    x=x,
+                    y=y,
+                    vx=vx,
+                    vy=vy,
+                    life=life,
+                    max_life=life,
+                    radius=self._random.uniform(1.5, 3.8),
+                    color=self._random.choice(colors),
+                )
+            )
+
+    def _update_particles(self) -> None:
+        alive: List[Particle] = []
+        for particle in self.particles:
+            particle.x += particle.vx
+            particle.y += particle.vy
+            particle.vx *= 0.96
+            particle.vy = particle.vy * 0.96 + 0.08
+            particle.life -= 1
+            if particle.life > 0:
+                alive.append(particle)
+        self.particles = alive
+
+    def _draw_particles(self) -> None:
+        for particle in self.particles:
+            ratio = particle.life / particle.max_life
+            radius = max(0.8, particle.radius * ratio)
+            self.canvas.create_oval(
+                particle.x - radius,
+                particle.y - radius,
+                particle.x + radius,
+                particle.y + radius,
+                fill=particle.color,
+                outline="",
+            )
 
     def _render(self) -> None:
         self.canvas.delete("all")
@@ -150,13 +213,26 @@ class SnakeApp:
             color = "#52b788" if index else "#74c69d"
             self._draw_cell(x, y, color)
 
+        self._draw_particles()
+
         if self.game.game_over:
             self.status_var.set(f"Game Over | Score: {self.game.score} | Press R to restart")
         else:
             self.status_var.set(f"Score: {self.game.score} | Arrows to move | R to restart")
 
     def _tick(self) -> None:
+        prev_score = self.game.score
+        prev_food = self.game.food
+        was_game_over = self.game.game_over
         self.game.step()
+        if self.game.score > prev_score:
+            bx, by = self._cell_center(prev_food[0], prev_food[1])
+            self._spawn_burst(bx, by, count=16, speed=2.5, colors=["#ffd166", "#ff9f1c", "#e63946"])
+        if not was_game_over and self.game.game_over:
+            head_x, head_y = self.game.snake[0]
+            bx, by = self._cell_center(head_x, head_y)
+            self._spawn_burst(bx, by, count=34, speed=3.4, colors=["#ff595e", "#ffca3a", "#8ac926"])
+        self._update_particles()
         self._render()
         self.root.after(self.config.tick_ms, self._tick)
 
