@@ -1,12 +1,16 @@
 ﻿# User Guide
 
 ## 1. Prerequisites
-- Windows
-- Python 3.13 available at:
-  `C:\Users\gaope\python-sdk\python3.13.2\python.exe`
+- Python 3.x
+- tkinter available (comes with standard Python on most desktop installs)
 
 ## 2. Start Game
 Run in project root:
+```bash
+python3 snake_game.py
+```
+
+If you are in the provided Windows environment, you can also run:
 ```powershell
 C:\Users\gaope\python-sdk\python3.13.2\python.exe snake_game.py
 ```
@@ -16,18 +20,19 @@ C:\Users\gaope\python-sdk\python3.13.2\python.exe snake_game.py
 - Arrow Down: Move down
 - Arrow Left: Move left
 - Arrow Right: Move right
-- `R`: Restart after game over
+- `R`: Restart (after game over)
 
 ## 4. Rules
 - Eat red food to grow and gain score.
 - Hitting wall ends the game.
 - Hitting snake body ends the game.
 - Reversing direction directly is not allowed.
+- Filling the entire board triggers game over after score updates (all cells occupied).
 
 ## 5. Run Tests
-```powershell
-C:\Users\gaope\python-sdk\python3.13.2\python.exe -m unittest discover -s tests -v
+```bash
+python3 -m unittest discover -s tests -v
 ```
 
 ## 6. Known Limitation
-Automated tests focus on game logic. GUI rendering and manual play experience are verified by manual run.
+Automated tests focus on core logic. GUI rendering and manual play experience are verified by manually running the game.
