@@ -4,6 +4,10 @@ from snake_game import Direction, SnakeGame
 
 
 class SnakeGameTests(unittest.TestCase):
+    def test_board_too_small_raises_error(self):
+        with self.assertRaises(ValueError):
+            SnakeGame(width=3, height=4)
+
     def test_initial_state(self):
         game = SnakeGame(width=10, height=10, seed=1)
         self.assertEqual(len(game.snake), 3)
@@ -49,6 +53,35 @@ class SnakeGameTests(unittest.TestCase):
         game.direction = Direction.UP
         game.change_direction(Direction.RIGHT)
         game.step()
+        self.assertTrue(game.game_over)
+
+    def test_fill_last_cell_triggers_game_over(self):
+        game = SnakeGame(width=4, height=4, seed=1)
+        game.snake = [
+            (1, 1),
+            (0, 1),
+            (0, 0),
+            (1, 0),
+            (2, 0),
+            (3, 0),
+            (3, 1),
+            (2, 1),
+            (2, 2),
+            (3, 2),
+            (3, 3),
+            (2, 3),
+            (1, 3),
+            (0, 3),
+            (0, 2),
+        ]
+        game.direction = Direction.DOWN
+        game.change_direction(Direction.DOWN)
+        game.food = (1, 2)
+
+        game.step()
+
+        self.assertEqual(game.score, 1)
+        self.assertEqual(len(game.snake), 16)
         self.assertTrue(game.game_over)
 
 
